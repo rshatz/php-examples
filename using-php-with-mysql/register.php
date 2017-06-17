@@ -6,6 +6,7 @@
 
     // Check for form submission:
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        
         // Initialize an error array
         $errors = array();
 
@@ -44,26 +45,26 @@
         // if error array is empty register the user into the database
         if (empty($errors)) {
             // connect to the database (db)
-            require ('../../../../connect/mysqli_connect.php');
+            require ('../../../../database-login/mysqli_connect.php');
 
             // Make the query:
-            $q = "INSERT INTO users (first_name, last_name, email, pass, registration_date) 
+            $query = "INSERT INTO users (first_name, last_name, email, pass, registration_date) 
                 VALUES ('$fn', '$ln', '$e', SHA1('$p'), NOW() ) ";
 
             // Run the query.
-            $r = @mysqli_query ($dbc, $q);
+            $result = @mysqli_query ($dbc, $query);
             
             // If query has no errors 
-            if ($r) {
+            if ($result) {
                 // Print a message:
                 echo '<h1>Thank you!</h1><p> You are now registered.</p><p><br /></p>';
             } else { // If query has errors.
-                // Print message:
+                // Print public message:
                 echo '<h1>System Error</h1><p class="error"> 
                 You could not be registered due to a system error. We apologize for any inconvenience.</p>';
 
                 // DEBUGGING MESSAGE
-                echo '<p>' . mysqli_error($dbc) . '<br /><br />Query: ' , $q . '</p>';
+                echo '<p>' . mysqli_error($dbc) . '<br /><br />Query: ' , $query . '</p>';
             }
 
             // Close the database
