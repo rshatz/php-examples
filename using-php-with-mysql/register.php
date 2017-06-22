@@ -6,7 +6,10 @@
 
     // Check for form submission:
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        
+
+        // connect to the database (db)
+        require ('../../../../database-login/mysqli_connect.php');
+
         // Initialize an error array
         $errors = array();
 
@@ -14,21 +17,21 @@
         if (empty($_POST['first_name'])) {
             $errors[] = 'Please enter your first name.';
         } else {
-            $fn = trim($_POST['first_name']);
+            $fn = mysqli_real_escape_string($link, trim($_POST['first_name']));
         }
 
         // Check for a last name:
         if (empty($_POST['last_name'])) {
             $errors[] = 'Please enter your last name.';
         } else {
-            $ln = trim($_POST['last_name']);
+            $ln = mysqli_real_escape_string($link, trim($_POST['last_name']));
         }
 
         // Check for an email address:
         if (empty($_POST['email'])) {
             $errors[] = 'Please enter your email.';
         } else {
-            $e = trim($_POST['email']);
+            $e = mysqli_real_escape_string($link, trim($_POST['email']));
         }
 
         // Check for a password and match against the confirmed password:
@@ -36,7 +39,7 @@
             if ($_POST['pass1'] != $_POST['pass2']) {
                 $errors[] = 'Passwords do not match.';
             } else {
-                $p = trim($_POST['pass1']);
+                $p = mysqli_real_escape_string($link, trim($_POST['pass1']));
             }
         } else {
             $errors[] = 'Please enter a password';
@@ -44,15 +47,14 @@
 
         // if error array is empty register the user into the database
         if (empty($errors)) {
-            // connect to the database (db)
-            require ('../../../../database-login/mysqli_connect.php');
+
 
             // Make the query:
             $query = "INSERT INTO users (first_name, last_name, email, pass, registration_date) 
                 VALUES ('$fn', '$ln', '$e', SHA1('$p'), NOW() ) ";
 
             // Run the query.
-            $result = @mysqli_query ($dbc, $query);
+            $result = @mysqli_query ($link, $query);
             
             // If query has no errors 
             if ($result) {
@@ -64,11 +66,11 @@
                 You could not be registered due to a system error. We apologize for any inconvenience.</p>';
 
                 // DEBUGGING MESSAGE
-                echo '<p>' . mysqli_error($dbc) . '<br /><br />Query: ' , $query . '</p>';
+                echo '<p>' . mysqli_error($link) . '<br /><br />Query: ' , $query . '</p>';
             }
 
             // Close the database
-            mysqli_close($dbc);
+            mysqli_close($link);
 
             // Include the footer and quit the script:
             include ('includes/footer.html');
@@ -82,6 +84,9 @@
             }
             echo '</p><p>Please try again.</p><p><br /></p>';
         } // End of if (empty($errors))
+
+    mysqli_close($link);
+
     } // End of main Submit conditional
 ?>
 

@@ -11,10 +11,14 @@ require ('../../../../database-login/mysqli_connect.php');
 $query = "SELECT CONCAT(last_name, ', ', first_name) AS name, 
             DATE_FORMAT(registration_date, '%M %d, %Y') AS date_reg FROM users ORDER BY registration_date ASC";
 // Run the query
-$result = @mysqli_query ($dbc, $query);
+$result = @mysqli_query ($link, $query);
 
-// If it ran OK, display the records
-if ($result) {
+$num = mysqli_num_rows ($result);
+
+// If records were returned
+if ($num > 0) {
+
+    echo "<p>There are currently $num registered users.</p>\n";
 
     // Table header
     echo '<table align="center" cellspacing="3" cellpadding="3" width="75%">
@@ -29,15 +33,15 @@ if ($result) {
     echo '</table>';
     mysqli_free_result ($result);
 
-} else { // If query was unsuccesful
+} else { // If there were no returned records
     // Public message:
-    echo '<p class="error">The current users could not be retrieved. We apologize for any inconvenience.</p>';
+    echo '<p class="error">There are currently no registered users.</p>';
     
     // Debugging Message:
-    echo '<p>' . mysqli_error($dbc) . '<br /><br />Query: ' . $query . '</p>';
+    echo '<p>' . mysqli_error($link) . '<br /><br />Query: ' . $query . '</p>';
 } // End of if ($result)
 
-mysqli_close($dbc); // Close the database connection
+mysqli_close($link); // Close the database connection
 
 include ('includes/footer.html');
 
