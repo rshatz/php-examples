@@ -48,7 +48,6 @@
         // if error array is empty register the user into the database
         if (empty($errors)) {
 
-
             // Make the query:
             $query = "INSERT INTO users (first_name, last_name, email, pass, registration_date) 
                 VALUES ('$fn', '$ln', '$e', SHA1('$p'), NOW() ) ";

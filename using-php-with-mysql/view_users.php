@@ -11,9 +11,9 @@ require ('../../../../database-login/mysqli_connect.php');
 $query = "SELECT CONCAT(last_name, ', ', first_name) AS name, 
             DATE_FORMAT(registration_date, '%M %d, %Y') AS date_reg FROM users ORDER BY registration_date ASC";
 // Run the query
-$result = @mysqli_query ($link, $query);
+$result = @mysqli_query($link, $query);
 
-$num = mysqli_num_rows ($result);
+$num = mysqli_num_rows($result);
 
 // If records were returned
 if ($num > 0) {
